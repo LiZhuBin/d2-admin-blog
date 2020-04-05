@@ -15,15 +15,13 @@
         class="page-login--content"
         flex="dir:top main:justify cross:stretch box:justify">
         <div class="page-login--content-header">
-          <p class="page-login--content-header-motto">
-            时间是一切财富中最宝贵的财富
-          </p>
+
         </div>
         <div
           class="page-login--content-main"
           flex="dir:top main:center cross:center">
           <!-- logo -->
-          <img class="page-login--logo" src="./image/logo@2x.png">
+<!--          <img class="page-login&#45;&#45;logo" src="./image/logo@2x.png">-->
           <!-- form -->
           <div class="page-login--form">
             <el-card shadow="never">
@@ -49,16 +47,7 @@
                     <i slot="prepend" class="fa fa-keyboard-o"></i>
                   </el-input>
                 </el-form-item>
-                <el-form-item prop="code">
-                  <el-input
-                    type="text"
-                    v-model="formLogin.code"
-                    placeholder="验证码">
-                    <template slot="append">
-                      <img class="login-code" src="./image/login-code.png">
-                    </template>
-                  </el-input>
-                </el-form-item>
+
                 <el-button
                   size="default"
                   @click="submit"
@@ -72,37 +61,17 @@
               class="page-login--options"
               flex="main:justify cross:center">
               <span><d2-icon name="question-circle"/> 忘记密码</span>
-              <span>注册用户</span>
+              <span @click="go()">注册用户</span>
             </p>
+            <div>author:彬,password:123456</div>
+            <div>passer:Jescie Vaughan,password:PEH57FZB3SS</div>
             <!-- quick login -->
             <el-button class="page-login--quick" size="default" type="info" @click="dialogVisible = true">
               快速选择用户（测试功能）
             </el-button>
           </div>
         </div>
-        <div class="page-login--content-footer">
-          <p class="page-login--content-footer-locales">
-            <a
-              v-for="language in $languages"
-              :key="language.value"
-              @click="onChangeLocale(language.value)">
-              {{ language.label }}
-            </a>
-          </p>
-          <p class="page-login--content-footer-copyright">
-            Copyright
-            <d2-icon name="copyright"/>
-            2018 D2 Projects 开源组织出品
-            <a href="https://github.com/FairyEver">
-              @FairyEver
-            </a>
-          </p>
-          <p class="page-login--content-footer-options">
-            <a href="#">帮助</a>
-            <a href="#">隐私</a>
-            <a href="#">条款</a>
-          </p>
-        </div>
+
       </div>
     </div>
     <el-dialog
@@ -125,6 +94,7 @@
 import dayjs from 'dayjs'
 import { mapActions } from 'vuex'
 import localeMixin from '@/locales/mixin.js'
+import util from "../../../libs/util";
 export default {
   mixins: [
     localeMixin
@@ -137,20 +107,16 @@ export default {
       dialogVisible: false,
       users: [
         {
-          name: 'Admin',
-          username: 'admin',
-          password: 'admin'
+          name: '作者彬',
+          username: '彬',
+          password: '123456'
         },
         {
-          name: 'Editor',
-          username: 'editor',
-          password: 'editor'
+          name: '游客',
+          username: 'Jescie Vaughan',
+          password: 'PEH57FZB3SS'
         },
-        {
-          name: 'User1',
-          username: 'user1',
-          password: 'user1'
-        }
+
       ],
       // 表单
       formLogin: {
@@ -192,6 +158,7 @@ export default {
   beforeDestroy () {
     clearInterval(this.timeInterval)
   },
+
   methods: {
     ...mapActions('d2admin/account', [
       'login'
@@ -221,16 +188,46 @@ export default {
           this.login({
             username: this.formLogin.username,
             password: this.formLogin.password
+
           })
             .then(() => {
               // 重定向对象不存在则返回顶层路径
-              this.$router.replace(this.$route.query.redirect || '/')
+             // this.$router.replace(this.$route.query.redirect || '/')
+
+              this.$router.push('/blog');
             })
+
+          // this.$api.account.checkAccount(this.$qs.stringify({accountName:this.formLogin.username,accountPassword:this.formLogin.password}))
+          //   .then((response) => {
+          //       if(response.data.data.user.id){
+          //         // this.$store.dispatch("userLogin", true);
+          //         //Vuex在用户刷新的时候userLogin会回到默认值false，所以我们需要用到HTML5储存
+          //         //我们设置一个名为Flag，值为isLogin的字段，作用是如果Flag有值且为isLogin的时候，证明用户已经登录了。
+          //         localStorage.setItem("Flag", "isLogin");
+          //         this.$store.state.myData = response.data.data;
+          //         this.$store.state.user.commit('updateInfo',"fff")
+          //         alert("ff")
+          //         // 设置 vuex 用户信息
+          //
+          //         //util.cookies.set('uuid',response.data.data.user.accountName )
+          //         //util.cookies.set('token', response.data.data.token)
+          //         //state.info = response.data.data.user.accountName
+          //       //  this.$router.push('/blog');
+          //       }else {
+          //         this.$message.error(response.data.data.message);
+          //       }
+          //
+          //
+          //   }).catch((error)=>{
+          // });
         } else {
           // 登录表单校验失败
           this.$message.error('表单校验失败，请检查')
         }
       })
+    },
+    go(){
+      this.$router.push('/register')
     }
   }
 }

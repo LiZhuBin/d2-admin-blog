@@ -42,5 +42,10 @@ export default {
         resolve()
       })
     }
+  },
+  mutations:{
+    updateInfo(state,info){
+      state.info = info;
+    }
   }
 }
